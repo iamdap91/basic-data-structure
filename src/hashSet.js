@@ -1,58 +1,34 @@
-class CustomHashSet {
+const hash = (string, storageSize) => {
+    let hash = 0;
+    for (let i = 0; i < string.length; i++) hash += string.charCodeAt(i);
+    return hash % storageSize;
+};
 
-    data = {};
-    length = 0;
-    // _default = new Date();
 
-    contains = (val) => {
-        val = val.toString();
-        return (!!this.data[val] && this.data.hasOwnProperty(val));
-    };
+class HashSet {
+    storage;
+    size;
+    constructor(size) {
+        this.storage = [];
+        this.size = size;
+    }
 
-    add = (val) => {
-        if (!this.contains(val.toString())) {
-            this.length++;
-        }
-        this.data[val.toString()] = val;
-    };
-
-    remove = (val) => {
-        val = val.toString();
-        if (!this.contains(val)) {
-            return false;
+    add(value) {
+        const index = hash(value, this.size);
+        if (!this.storage[index]) {
+            this.storage[index] = [value];
         } else {
-            delete this.data[val.toString()];
-            this.length--;
-            return true;
+            const res = this.storage[index].find(each => each === value);
+            res ? null : this.storage[index].push(value);
         }
-    };
-
-    clear = () => {
-        for (var val in this.data) {
-            if (this.data.hasOwnProperty(val)) {
-                delete this.data[val];
-            }
-        }
-        this.length = 0;
     }
 
-    isEmpty = () => (this.length === 0);
-
-    getSize = () => this.length;
-
-    toArray = () => {
-        const arr = [];
-        for (let [key, value] of Object.entries(this.data)) {
-            arr.push(value);
-        }
-        return arr;
-    }
 }
 
-const cHashSet = new CustomHashSet();
-for (let i = 0; i< 10; i++){
-    cHashSet.add(`value ${i}`);
+
+const hSet = new HashSet(23);
+for (let i = 0; i < 17; i++){
+    hSet.add(`Node ${Math.round(Math.random() * 10)}`);
 }
 
-console.log(cHashSet.toArray());
-
+console.log(hSet.storage);
